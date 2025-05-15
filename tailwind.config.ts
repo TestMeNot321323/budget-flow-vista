@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom budget tracker colors
+				budget: {
+					primary: '#6E59A5',
+					secondary: '#8B5CF6',
+					accent: '#D6BCFA',
+					expense: '#F97316',
+					income: '#10B981',
+					neutral: '#8E9196',
+					light: '#F1F0FB'
 				}
 			},
 			borderRadius: {
