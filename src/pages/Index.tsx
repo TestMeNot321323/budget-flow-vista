@@ -14,7 +14,9 @@ import CategoryBreakdown from '@/components/CategoryBreakdown';
 import TransactionForm from '@/components/TransactionForm';
 import CurrencyToggle from '@/components/CurrencyToggle';
 import MonthSelector from '@/components/MonthSelector';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import TransactionList from '@/components/TransactionList';
+import BudgetForm from '@/components/BudgetForm';
 
 const Index = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
@@ -23,6 +25,7 @@ const Index = () => {
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
+  const [budget, setBudget] = useState<number>(0);
 
   // Initialize the selected month
   useEffect(() => {
@@ -60,6 +63,11 @@ const Index = () => {
     setTransactions(prev => [...prev, transactionWithId]);
   };
 
+  // Set budget
+  const handleSetBudget = (amount: number) => {
+    setBudget(amount);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar currency={currency} />
@@ -74,17 +82,39 @@ const Index = () => {
         </div>
         
         <div className="grid gap-6">
-          <Dashboard transactions={filteredTransactions} currency={currency} />
+          <Dashboard transactions={filteredTransactions} currency={currency} budget={budget} />
           
-          <div className="grid gap-6 lg:grid-cols-2">
-            <TrendsGraph 
-              transactions={filteredTransactions} 
-              selectedYear={selectedYear} 
-              selectedMonth={selectedMonth}
-              currency={currency}
-            />
-            <CategoryBreakdown transactions={filteredTransactions} currency={currency} />
-          </div>
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="mb-4 flex justify-center">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="transactions">Transactions</TabsTrigger>
+              <TabsTrigger value="budget">Set Budget</TabsTrigger>
+            </TabsList>
+            <TabsContent value="overview">
+              <div className="grid gap-6 lg:grid-cols-2">
+                <TrendsGraph 
+                  transactions={filteredTransactions} 
+                  selectedYear={selectedYear} 
+                  selectedMonth={selectedMonth}
+                  currency={currency}
+                />
+                <CategoryBreakdown transactions={filteredTransactions} currency={currency} />
+              </div>
+            </TabsContent>
+            <TabsContent value="transactions">
+              <TransactionList 
+                transactions={filteredTransactions.filter(t => t.currency === currency)}
+                currency={currency}
+              />
+            </TabsContent>
+            <TabsContent value="budget">
+              <BudgetForm 
+                currentBudget={budget} 
+                onSetBudget={handleSetBudget} 
+                currency={currency} 
+              />
+            </TabsContent>
+          </Tabs>
           
           <div className="mt-6">
             <TransactionForm onAddTransaction={handleAddTransaction} currency={currency} />
