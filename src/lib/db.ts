@@ -1,13 +1,13 @@
 
 import { Pool } from 'pg';
-import { Transaction, Budget, Currency } from './data';
+import { Transaction, Currency } from './data';
 
 const pool = new Pool({
-  host: import.meta.env.VITE_PG_HOST || 'localhost',
-  port: Number(import.meta.env.VITE_PG_PORT) || 5432,
-  user: import.meta.env.VITE_PG_USER || 'postgres',
-  password: import.meta.env.VITE_PG_PASSWORD || 'postgres',
-  database: import.meta.env.VITE_PG_DATABASE || 'budget_tracker',
+  host: process.env.PG_HOST || 'localhost',
+  port: Number(process.env.PG_PORT) || 5432,
+  user: process.env.PG_USER || 'postgres',
+  password: process.env.PG_PASSWORD || 'postgres',
+  database: process.env.PG_DATABASE || 'budget_tracker',
 });
 
 export async function getTransactionsForMonth(year: number, month: number): Promise<Transaction[]> {
@@ -20,10 +20,11 @@ export async function getTransactionsForMonth(year: number, month: number): Prom
     return result.rows.map(row => ({
       id: `trans-${row.id}`,
       amount: parseFloat(row.amount),
-      category: row.category,
+      categoryId: row.category, // Map database 'category' to 'categoryId'
+      subcategoryId: '', // Default subcategoryId (will need to be updated)
       description: row.description,
       date: new Date(row.date),
-      type: row.type,
+      type: row.type as 'income' | 'expense',
       currency: row.currency as Currency,
     }));
   } catch (error) {
@@ -34,20 +35,21 @@ export async function getTransactionsForMonth(year: number, month: number): Prom
 
 export async function addTransaction(transaction: Omit<Transaction, 'id'>): Promise<Transaction | null> {
   try {
-    const { amount, category, description, date, type, currency } = transaction;
+    const { amount, categoryId, description, date, type, currency } = transaction;
     const result = await pool.query(
       'INSERT INTO transactions (amount, category, description, date, type, currency) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [amount, category, description, date, type, currency]
+      [amount, categoryId, description, date, type, currency]
     );
     
     const row = result.rows[0];
     return {
       id: `trans-${row.id}`,
       amount: parseFloat(row.amount),
-      category: row.category,
+      categoryId: row.category, // Map database 'category' to 'categoryId'
+      subcategoryId: transaction.subcategoryId, // Use the subcategoryId from the input
       description: row.description,
       date: new Date(row.date),
-      type: row.type,
+      type: row.type as 'income' | 'expense',
       currency: row.currency as Currency,
     };
   } catch (error) {
