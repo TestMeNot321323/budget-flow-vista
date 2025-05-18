@@ -1,8 +1,73 @@
+
 # Welcome to your Lovable project
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/86f164ff-4c48-47ad-b0da-2ddddf32f601
+
+## Building and Running the Project
+
+### Option 1: Using Docker (Recommended)
+
+1. **Setup Environment Variables:**
+   Make a copy of `.env.example` and name it `.env`
+   ```
+   cp .env.example .env
+   ```
+
+   Update the values in `.env` with your Firebase and database credentials.
+
+2. **Build and Run with Docker:**
+   ```
+   chmod +x start.sh
+   ./start.sh
+   ```
+
+   This script will:
+   - Build and start Docker containers
+   - Set up the PostgreSQL database
+   - Start the web application
+
+3. **Access your application:**
+   - Web App: http://localhost:8080
+   - PostgreSQL: localhost:5432
+     - Username: postgres
+     - Password: postgres
+     - Database: budget_tracker
+
+### Option 2: Manual Setup
+
+1. **Setup Environment Variables:**
+   Make a copy of `.env.example` and name it `.env`
+   ```
+   cp .env.example .env
+   ```
+
+   Update the values with your Firebase and database credentials.
+
+2. **Install Dependencies:**
+   ```
+   npm install
+   ```
+
+3. **Start the Development Server:**
+   ```
+   npm run dev
+   ```
+
+4. **Access your application:**
+   - Web App: http://localhost:8080
+
+## Authentication Features
+
+The application supports the following authentication methods:
+
+1. **Email/Password Authentication**
+   - User registration with email and password
+   - Login with email and password
+
+2. **Google Authentication**
+   - One-click sign-in with Google account
 
 ## How can I edit this code?
 
@@ -59,6 +124,8 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Firebase Authentication
+- PostgreSQL
 
 ## How can I deploy this project?
 
