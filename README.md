@@ -26,10 +26,11 @@
    This script will:
    - Build and start Docker containers
    - Set up the PostgreSQL database
-   - Start the web application
+   - Start the web application and Spring Boot backend
 
 3. **Access your application:**
    - Web App: http://localhost:8080
+   - Backend API: http://localhost:8081
    - PostgreSQL: localhost:5432
      - Username: postgres
      - Password: postgres
@@ -55,8 +56,24 @@
    npm run dev
    ```
 
-4. **Access your application:**
+4. **Run the Spring Boot backend:**
+   ```
+   cd backend
+   mvn spring-boot:run
+   ```
+
+5. **Access your application:**
    - Web App: http://localhost:8080
+   - Backend API: http://localhost:8081
+
+## Backend API
+
+The application now features a robust Spring Boot backend with the following capabilities:
+
+- **RESTful API**: Complete CRUD operations for budgets and transactions
+- **User Authentication**: Secured endpoints with Firebase authentication
+- **Data Persistence**: PostgreSQL database integration
+- **API Documentation**: Available in the backend README.md
 
 ## Authentication Features
 
@@ -126,6 +143,7 @@ This project is built with:
 - Tailwind CSS
 - Firebase Authentication
 - PostgreSQL
+- Spring Boot (Java backend)
 
 ## How can I deploy this project?
 
